@@ -34,12 +34,13 @@ pip3 install hashlib
 ```python
 picturePath = "/home/y/code/bingWallpaper/picture/background.jpg"
 ```
-改为你自己项目所在的路径：
+改为你自己项目所在的绝对路径：
 ```python
 picturePath = "/absolute/path/to/project/picture/background.jpg"
 ```
 ### 1.2 ``RunMe.sh``
-文件中的两个命令根据自己的需求选择一个即可
+首先和上面一样，把第6行和第9行，到main.py的路径改为自己的绝对路径
+
 ```bash
 #!/bin/bash
 
@@ -51,6 +52,8 @@ python3 /home/y/code/bingWallpaper/main.py random
 #2、传入数字参数，选择壁纸，0为今天，1为昨天，2为前天，以此类推
 #python3 /home/y/code/bingWallpaper/main.py 0
 ```
+然后根据自己的需求注释掉其中一行。
+
 在终端中打开项目路径，运行这条命令，给sh脚本添加执行权限
 ```bash
 sudo chmod +x ./RunMe.sh

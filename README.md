@@ -88,7 +88,7 @@ sudo apt install gnome-startup-applications
 
 思路很简单。如果想修改程序，实现其他功能的，可以看看这部分内容。
 
-## 1. 主程序
+## 1 主程序
 ### 1.1 获取Bing背景图片：
 通过这个api：[http://bingw.jasonzeng.dev](http://bingw.jasonzeng.dev) 获取bing的背景图片。
 

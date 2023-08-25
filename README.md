@@ -24,44 +24,30 @@ sudo apt install python3-pip
 ```
 ### 0.3 安装requests库和hashlib库
 ```bash
-pip3 install requests
-pip3 install hashlib
+pip install requests
+pip install hashlib
 ```
 注意是requests不是request，不要漏了最后的s
-## 1 修改路径
-### 1.1 ``main.py``
-把第6行，到项目中picture文件夹下图片的路径：
-```python
-picturePath = "/home/y/code/bingWallpaper/picture/background.jpg"
-```
-改为你自己项目所在的绝对路径：
-```python
-picturePath = "/absolute/path/to/project/picture/background.jpg"
-```
-### 1.2 ``RunMe.sh``
-首先和上面一样，把第6行和第9行，到main.py的路径改为自己的绝对路径
+## 1 修改配置
 
+打开``config.yml``文件，修改``path``为项目的绝对路径；修改``mode``为你想要的模式：
+
+|mode|说明|
+|:---:|:---:|
+|random|随机图片作为壁纸|
+|0|当天图片作为壁纸|
+|1|昨天图片作为壁纸|
+|...|...|
+
+
+在终端中运行这条命令，给sh脚本添加执行权限
 ```bash
-#!/bin/bash
-
-#下面两个模式清选择一个，注释掉另一个（在一行开头加“#”表示注释）
-
-#1、传入randonm参数，随机选择壁纸
-python3 /home/y/code/bingWallpaper/main.py random
-
-#2、传入数字参数，选择壁纸，0为今天，1为昨天，2为前天，以此类推
-#python3 /home/y/code/bingWallpaper/main.py 0
-```
-然后根据自己的需求注释掉其中一行。
-
-在终端中打开项目路径，运行这条命令，给sh脚本添加执行权限
-```bash
-sudo chmod +x ./RunMe.sh
+sudo chmod +x ./RUNME.sh
 ```
 到这里，你可以在终端中运行
 
 ```bash
-./RunMe.sh
+./RUNME.sh
 ```
 来更换壁纸
 
@@ -80,7 +66,7 @@ time.sleep(5)
 sudo apt install gnome-startup-applications
 ``` 
 
-打开启动应用程序，点击添加，第二栏命令通过点击右边的“浏览”选择RunMe.sh脚本文件。第一栏，第三栏自己想怎么写就怎么写。
+打开启动应用程序，点击添加，第二栏命令通过点击右边的“浏览”选择RUNME.sh脚本文件。第一栏，第三栏自己想怎么写就怎么写。
 
 
 ******
@@ -102,7 +88,6 @@ response = requests.get(url)
 with open(picturePath, "wb") as img:
    img.write(response.content)
 ```
-其中``sys.argv[1]``是在``RunMe.sh``中传给程序的参数，后面会介绍。
 ### 1.2 设置壁纸
 
 首先比较本地图片和从api获取的图片是否相同，如果相同则不设置壁纸，如果不同则设置壁纸。
@@ -125,5 +110,5 @@ gsettings set org.gnome.desktop.background picture-uri file:////path/to/picture.
 setCommand = "gsettings set org.gnome.desktop.background picture-uri file:///{}".format(picturePath)
 os.system(setCommand)
 ```
-## 2 RunMe.sh脚本
-脚本的主要作用就是给主程序传递api的index参数值，random表示随机图片，数字表示具体图片。
+## 2 RUNME.sh脚本
+脚本的主要作用是读取配置文件`config.yml`,给主程序传递api的index参数值和项目的路径。

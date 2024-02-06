@@ -1,4 +1,5 @@
 #!/bin/bash
+# modified 6 Feb, 2024
 
 SCRIPT_DIR=$(dirname "$0")
 CONFIG_FILE="$SCRIPT_DIR/config.yml"

@@ -1,5 +1,7 @@
-#到醒目的绝对路径：
+# Absolute path to project main folder
 path: /home/zc/BingWallpaper-Ubuntu
 
-#模式：0为当天壁纸，random为随机壁纸
+# mode
+# [0]: update today's picture 
+# [1]: update yesterday's picture 
 mode: 0

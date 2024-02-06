@@ -7,7 +7,7 @@ This project is to obtain the background image of bing and set it as the wallpap
 
 # Getting Started
 
-## 0 
+## 0 Preapre the Environment
 ### 0.1 Install python3
 ```bash
 sudo apt install python3
@@ -25,7 +25,7 @@ pip install hashlib
 
 ## 1 Modify Config file
 
-Open``config.yml``file and change``path``to your work path, change``mode``as needed
+Open ``config.yml`` file and change ``path`` to your work path, change ``mode`` as needed
 
 |mode|intro|
 |:---:|:---:|
@@ -59,5 +59,6 @@ The above code is to wait for system to connect to the Interenet after booting.
 sudo apt install gnome-startup-applications
 ``` 
 
+### 2.2 Set Auto Run
 Open the startup application, click Add, and select the RUNME.sh script file by clicking "Browse" on the right in the second column of commands. 
 Fill in the first and third columns as needed.

@@ -37,7 +37,7 @@ Open ``config.yml`` file and change ``path`` to your work path, change ``mode`` 
 
 Add execution permission to RUNME.sh
 ```bash
-sudo chmod +x ./RUNME.sh
+sudo chmod +x RUNME.sh
 ```
 Now, you can change the wallpaper by running:
 

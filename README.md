@@ -10,17 +10,21 @@ This project is to obtain the background image of bing and set it as the wallpap
 ## 0 Preapre the Environment
 ### 0.1 Install python3
 ```bash
-sudo apt install python3
+sudo apt install python
 ```
 
 ### 0.2 Install pip3
 ```bash
-sudo apt install python3-pip
+sudo apt install python-pip
 ```
 ### 0.3 Install required libraries
 ```bash
 pip install requests
-pip install hashlib
+```
+
+### 0.4 Clone the repository
+```bash
+git clone https://github.com/zacz08/BingWallpaper-Ubuntu.git
 ```
 
 ## 1 Modify Config file

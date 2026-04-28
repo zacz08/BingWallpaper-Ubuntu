@@ -58,13 +58,25 @@ def notify(message: str, title: str = "Bing Wallpaper") -> None:
 
 
 def set_wallpaper(picture_path: str) -> None:
-    """Set the wallpaper on every desktop/space using AppleScript."""
+    """Set the wallpaper on every desktop/space using AppleScript.
+
+    Uses `POSIX file` form which is the most reliable across recent
+    macOS releases. Captures stderr so AppleScript permission errors
+    surface as a notification instead of failing silently.
+    """
     abs_path = os.path.abspath(picture_path)
+    safe_path = abs_path.replace('"', '\\"')
     script = (
         'tell application "System Events" to tell every desktop '
-        f'to set picture to "{abs_path}"'
+        f'to set picture to POSIX file "{safe_path}"'
     )
-    subprocess.run(["/usr/bin/osascript", "-e", script], check=True)
+    result = subprocess.run(
+        ["/usr/bin/osascript", "-e", script],
+        capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        err = (result.stderr or "").strip() or "osascript failed"
+        raise RuntimeError(f"set wallpaper failed: {err}")
 
 
 def wait_for_network(timeout: int = 60) -> bool:

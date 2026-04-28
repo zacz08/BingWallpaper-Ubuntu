@@ -1,11 +1,22 @@
 #!/bin/bash
-# modified 6 Feb, 2024
+# RUNME.sh — fetch today's Bing image and set it as the macOS wallpaper.
+# Uses the system Python 3 shipped with macOS (no virtualenv, no pip).
 
-SCRIPT_DIR=$(dirname "$0")
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 CONFIG_FILE="$SCRIPT_DIR/config.yml"
 
-PROJECT_PATH=$(grep "path" "$CONFIG_FILE" | awk -F: '{print $2}' | tr -d '[:space:]')
-MODE=$(grep "mode" "$CONFIG_FILE" | awk -F: '{print $2}' | tr -d '[:space:]')
-MAIN_PY="$PROJECT_PATH/main.py"
+# Tiny YAML reader: only handles `key: value` lines.
+read_cfg() {
+    grep -E "^\s*$1\s*:" "$CONFIG_FILE" | head -n1 | awk -F: '{print $2}' | tr -d '[:space:]'
+}
 
-python3 "$MAIN_PY" "$PROJECT_PATH" "$MODE"
+PROJECT_PATH="$(read_cfg path)"
+MODE="$(read_cfg mode)"
+
+# Fall back to the script directory if `path` is not set.
+[ -z "$PROJECT_PATH" ] && PROJECT_PATH="$SCRIPT_DIR"
+[ -z "$MODE" ] && MODE="0"
+
+exec /usr/bin/python3 "$PROJECT_PATH/main.py" "$PROJECT_PATH" "$MODE"

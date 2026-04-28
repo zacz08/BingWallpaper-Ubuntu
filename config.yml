@@ -1,7 +1,13 @@
-# Absolute path to project main folder
-path: /home/zc/BingWallpaper-Ubuntu
+# Absolute path to project main folder (on macOS).
+# Example: /Users/yourname/Projects/BingWallpaper-Ubuntu
+path: /Users/zc/Projects/BingWallpaper-Ubuntu
 
 # mode
-# [0]: update today's picture 
-# [1]: update yesterday's picture 
+# [0]   : today's picture
+# [1]   : yesterday's picture
+# [2-7] : N days ago
 mode: 0
+
+# Daily run time (24h, local time). Used by install.sh to build the LaunchAgent.
+hour: 9
+minute: 0

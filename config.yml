@@ -7,7 +7,3 @@ path: /Users/zc/Projects/BingWallpaper-Ubuntu
 # [1]   : yesterday's picture
 # [2-7] : N days ago
 mode: 0
-
-# Daily run time (24h, local time). Used by install.sh to build the LaunchAgent.
-hour: 9
-minute: 0

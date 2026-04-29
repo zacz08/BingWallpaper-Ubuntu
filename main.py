@@ -117,7 +117,7 @@ def main() -> int:
     picture_path = os.path.join(picture_dir, "background.jpg")
 
     if not wait_for_network():
-        notify("No network, will retry on next schedule")
+        notify("No network, please retry")
         return 1
 
     try:
@@ -126,6 +126,7 @@ def main() -> int:
             notify("Failed to fetch image from Bing")
             return 1
         if is_same_image(img_data, picture_path):
+            notify("Already up to date")
             return 0
         with open(picture_path, "wb") as f:
             f.write(img_data)

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   LaunchAgent template for Bing Wallpaper.
-  install.sh fills in __PROJECT_PATH__, __HOUR__ and __MINUTE__ and
-  installs the result to ~/Library/LaunchAgents/com.user.bingwallpaper.plist
+  install.sh fills in __PROJECT_PATH__ and installs the result to
+  ~/Library/LaunchAgents/com.user.bingwallpaper.plist
 -->
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
   "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -21,23 +21,26 @@
     <string>__PROJECT_PATH__</string>
 
     <!--
-      Daily schedule. If the Mac is asleep / off at the trigger time,
-      launchd will run the job at the next opportunity (typically the
-      moment the system wakes), so a missed day is auto-recovered.
-    -->
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>__HOUR__</integer>
-        <key>Minute</key>
-        <integer>__MINUTE__</integer>
-    </dict>
+      Trigger strategy:
 
-    <!-- Also run once shortly after login, in case the schedule was missed. -->
+      `StartInterval` (every 6h) is special: per launchd.plist(5), if the
+      timer fires while the Mac is asleep it is COALESCED and runs once
+      on the next wake. That makes it the closest native equivalent to
+      "fire on first wake of the day", without polling or LaunchEvents.
+
+      Combined with the script's 20h debounce (picture/last_run.txt),
+      effective behavior is:
+          → run once on the first wake/login of each day
+          → never run again that day
+          → boot/login also triggers via RunAtLoad
+    -->
+    <key>StartInterval</key>
+    <integer>21600</integer>
+
     <key>RunAtLoad</key>
     <true/>
 
-    <!-- Don't relaunch on exit; this is a one-shot daily job. -->
+    <!-- One-shot daily job; do not relaunch on exit. -->
     <key>KeepAlive</key>
     <false/>
 

@@ -41,11 +41,25 @@ def get_bing_wallpaper(index: str = "0", resolution: str = "UHD") -> bytes | Non
     return _http_get(f"https://www.bing.com{url_base}_{resolution}.jpg")
 
 
-def is_same_image(new_data: bytes, picture_path: str) -> bool:
-    if not os.path.exists(picture_path):
-        return False
-    with open(picture_path, "rb") as f:
-        return hashlib.md5(f.read()).hexdigest() == hashlib.md5(new_data).hexdigest()
+def is_same_image(new_data: bytes, picture_dir: str) -> str | None:
+    """Return the path of an existing wallpaper file with identical bytes,
+    or None. We compare against any *.jpg in `picture_dir` so that the
+    timestamp-based filenames still de-duplicate correctly.
+    """
+    new_md5 = hashlib.md5(new_data).hexdigest()
+    if not os.path.isdir(picture_dir):
+        return None
+    for name in os.listdir(picture_dir):
+        if not name.lower().endswith(".jpg"):
+            continue
+        path = os.path.join(picture_dir, name)
+        try:
+            with open(path, "rb") as f:
+                if hashlib.md5(f.read()).hexdigest() == new_md5:
+                    return path
+        except OSError:
+            continue
+    return None
 
 
 def notify(message: str, title: str = "Bing Wallpaper") -> None:
@@ -114,7 +128,6 @@ def main() -> int:
     project_path, mode = sys.argv[1], sys.argv[2]
     picture_dir = os.path.join(project_path, "picture")
     os.makedirs(picture_dir, exist_ok=True)
-    picture_path = os.path.join(picture_dir, "background.jpg")
 
     if not wait_for_network():
         notify("No network, please retry")
@@ -125,12 +138,36 @@ def main() -> int:
         if not img_data:
             notify("Failed to fetch image from Bing")
             return 1
-        if is_same_image(img_data, picture_path):
-            notify("Already up to date")
-            return 0
-        with open(picture_path, "wb") as f:
-            f.write(img_data)
+
+        # macOS caches wallpapers by file PATH: re-setting the same path
+        # with new content does NOT refresh the desktop. Workaround: save
+        # each new image under a unique timestamped filename, point the
+        # wallpaper at that new path, then prune old files.
+        existing = is_same_image(img_data, picture_dir)
+        if existing:
+            # Same content as something we already have — but maybe it
+            # isn't the currently-set wallpaper. Force a re-set anyway.
+            picture_path = existing
+        else:
+            picture_path = os.path.join(
+                picture_dir, f"background_{int(time.time())}.jpg"
+            )
+            with open(picture_path, "wb") as f:
+                f.write(img_data)
+
         set_wallpaper(picture_path)
+
+        # Keep only the file we just used; delete the rest.
+        for name in os.listdir(picture_dir):
+            if not name.lower().endswith(".jpg"):
+                continue
+            p = os.path.join(picture_dir, name)
+            if p != picture_path:
+                try:
+                    os.remove(p)
+                except OSError:
+                    pass
+
         notify("Wallpaper updated successfully")
         return 0
     except Exception as e:
